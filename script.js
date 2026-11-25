@@ -294,3 +294,254 @@ document.addEventListener("DOMContentLoaded", () => {
 //             }
 //         });
 //     });
+document.addEventListener('DOMContentLoaded', () => {
+  const books = document.querySelectorAll('.book-3d');
+
+  books.forEach((book) => {
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let currentRotateY = parseFloat(book.dataset.rotateY) || -25;
+    let currentRotateX = parseFloat(book.dataset.rotateX) || 5;
+
+    const updateBookTransform = () => {
+      book.style.transform = `rotateX(${currentRotateX}deg) rotateY(${currentRotateY}deg)`;
+    };
+
+    // Mouse Events (Desktop)
+    book.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      book.style.transition = 'none'; // Instant response while dragging
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const deltaX = e.clientX - startX;
+      const deltaY = e.clientY - startY;
+
+      currentRotateY += deltaX * 0.65;
+      // Limit vertical tilt slightly so it stays standing upright on its edge
+      currentRotateX = Math.max(-25, Math.min(25, currentRotateX - deltaY * 0.3));
+
+      updateBookTransform();
+      startX = e.clientX;
+      startY = e.clientY;
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        book.style.transition = 'transform 0.1s ease-out';
+      }
+    });
+
+    // Touch Events (Mobile & Tablets)
+    book.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        isDragging = true;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        book.style.transition = 'none';
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isDragging || e.touches.length !== 1) return;
+      const deltaX = e.touches[0].clientX - startX;
+      const deltaY = e.touches[0].clientY - startY;
+
+      currentRotateY += deltaX * 0.75;
+      currentRotateX = Math.max(-25, Math.min(25, currentRotateX - deltaY * 0.3));
+
+      updateBookTransform();
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    }, { passive: true });
+
+    window.addEventListener('touchend', () => {
+      if (isDragging) {
+        isDragging = false;
+        book.style.transition = 'transform 0.1s ease-out';
+      }
+    });
+  });
+});
+document.addEventListener('DOMContentLoaded', () => {
+  const downloadBtn = document.getElementById('download-btn');
+  
+  if (downloadBtn) {
+    downloadBtn.addEventListener('click', (e) => {
+      // Optional: You can add a small analytics log or toast notification here if desired
+      console.log('Download initiated for Jerro Computer School flyer.');
+    });
+  }
+});
+// Automatic Annual Anniversary Counter (25 in 2026 -> 26 on Jan 1, 2027, etc.)
+document.addEventListener('DOMContentLoaded', () => {
+    const FOUNDING_YEAR = 2001; // 2026 - 2001 = 25 years; Jan 1, 2027 -> 26 years
+    const currentYear = new Date().getFullYear();
+    const schoolAge = Math.max(25, currentYear - FOUNDING_YEAR);
+
+    document.querySelectorAll('.dynamic-school-years').forEach(el => {
+        el.textContent = schoolAge;
+    });
+
+    document.querySelectorAll('.dynamic-current-year').forEach(el => {
+        el.textContent = currentYear;
+    });
+
+    const floater = document.getElementById('anniversaryFloater');
+    if (floater) {
+        floater.setAttribute('title', `Celebrating ${schoolAge} Years of Excellence`);
+        floater.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Switch to Home page if user is currently on another tab
+            const homePage = document.getElementById('page-home');
+            if (homePage && !homePage.classList.contains('active')) {
+                document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+                homePage.classList.add('active');
+                document.querySelectorAll('.nav-link').forEach(l => {
+                    l.classList.toggle('active', l.dataset.page === 'home');
+                });
+            }
+            const target = document.getElementById('anniversary-milestone');
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+    }
+    // Keep floating crest positioned below navbar & hide on scroll for mobile only
+    const navbarEl = document.querySelector('.navbar');
+    function positionAnniversaryCrest() {
+        if (!floater || !navbarEl) return;
+        const isMobile = window.innerWidth <= 768;
+
+        if (isMobile) {
+            if (window.scrollY > 15) {
+                floater.classList.add('mobile-scroll-hidden');
+            } else {
+                floater.classList.remove('mobile-scroll-hidden');
+            }
+        } else {
+            floater.classList.remove('mobile-scroll-hidden');
+        }
+
+        const navBottom = navbarEl.getBoundingClientRect().bottom;
+        const gap = isMobile ? 10 : 14;
+        floater.style.top = `${Math.max(0, navBottom) + gap}px`;
+    }
+
+    positionAnniversaryCrest();
+    window.addEventListener('scroll', positionAnniversaryCrest, { passive: true });
+    window.addEventListener('resize', positionAnniversaryCrest);
+});
+// ==================== UNIVERSAL DYNAMIC YEAR & ACADEMIC SESSION UPDATER ====================
+document.addEventListener('DOMContentLoaded', () => {
+    const currentYear = new Date().getFullYear();
+    const nextYear = currentYear + 1;
+    const prevYear = currentYear - 1;
+    const FOUNDING_YEAR = 2001;
+    const schoolAge = Math.max(25, currentYear - FOUNDING_YEAR);
+
+    // 1. Update designated classes and IDs
+    document.querySelectorAll('.dynamic-school-years').forEach(el => {
+        el.textContent = schoolAge;
+    });
+
+    document.querySelectorAll('.dynamic-current-year').forEach(el => {
+        el.textContent = currentYear;
+    });
+
+    document.querySelectorAll('.dynamic-next-year').forEach(el => {
+        el.textContent = nextYear;
+    });
+
+    const yearEl = document.getElementById("year");
+    if (yearEl) {
+        yearEl.textContent = currentYear;
+    }
+
+    const downloadBtn = document.getElementById('download-btn');
+    if (downloadBtn && downloadBtn.hasAttribute('download')) {
+        downloadBtn.setAttribute('download', `Jerro_Computer_School_Flyer_${currentYear}.pdf`);
+    }
+
+    // 2. Deep Text Node Scanner (Catches every stray year or session range anywhere in HTML)
+    const walkTextNodes = (node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+            let text = node.nodeValue;
+            let updated = text
+                // Update academic year ranges like "2026–2027" -> "2027–2028"
+                .replace(/2026\s*[–-]\s*2027/g, `${currentYear}–${nextYear}`)
+                .replace(/2025\s*[–-]\s*2026/g, `${prevYear}–${currentYear}`)
+                // Update founding range like "2001–2026" -> "2001–2027"
+                .replace(/2001\s*[–-]\s*2026/g, `2001–${currentYear}`)
+                // Update single year references (like prospectus titles, banners)
+                .replace(/\b2026\b/g, `${currentYear}`)
+                // Update past event captions (like Annual Tech Bootcamp 2025)
+                .replace(/\b2025\b/g, `${prevYear}`);
+
+            if (text !== updated) {
+                node.nodeValue = updated;
+            }
+        } else {
+            if (node.nodeType === Node.ELEMENT_NODE && !['SCRIPT', 'STYLE', 'INPUT', 'TEXTAREA'].includes(node.tagName)) {
+                for (let child of node.childNodes) {
+                    walkTextNodes(child);
+                }
+            }
+        }
+    };
+
+    walkTextNodes(document.body);
+
+    // 3. Floating Anniversary Crest Controller & Mobile Scroll Hide
+    const floater = document.getElementById('anniversaryFloater');
+    const navbarEl = document.querySelector('.navbar');
+
+    if (floater) {
+        floater.setAttribute('title', `Celebrating ${schoolAge} Years of Excellence`);
+        floater.addEventListener('click', (e) => {
+            e.preventDefault();
+            const homePage = document.getElementById('page-home');
+            if (homePage && !homePage.classList.contains('active')) {
+                document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+                homePage.classList.add('active');
+                document.querySelectorAll('.nav-link').forEach(l => {
+                    l.classList.toggle('active', l.dataset.page === 'home');
+                });
+            }
+            const target = document.getElementById('anniversary-milestone');
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+    }
+
+    function positionAnniversaryCrest() {
+        if (!floater || !navbarEl) return;
+        const isMobile = window.innerWidth <= 768;
+
+        if (isMobile) {
+            if (window.scrollY > 15) {
+                floater.classList.add('mobile-scroll-hidden');
+            } else {
+                floater.classList.remove('mobile-scroll-hidden');
+            }
+        } else {
+            floater.classList.remove('mobile-scroll-hidden');
+        }
+
+        const navBottom = navbarEl.getBoundingClientRect().bottom;
+        const gap = isMobile ? 10 : 14;
+        floater.style.top = `${Math.max(0, navBottom) + gap}px`;
+    }
+
+    if (floater && navbarEl) {
+        positionAnniversaryCrest();
+        window.addEventListener('scroll', positionAnniversaryCrest, { passive: true });
+        window.addEventListener('resize', positionAnniversaryCrest);
+    }
+});
