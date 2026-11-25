@@ -380,7 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 // Automatic Annual Anniversary Counter (25 in 2026 -> 26 on Jan 1, 2027, etc.)
 document.addEventListener('DOMContentLoaded', () => {
-    const FOUNDING_YEAR = 2001; // 2026 - 2001 = 25 years; Jan 1, 2027 -> 26 years
+    const FOUNDING_YEAR = 2000; // 2026 - 2000 = 25 years; Jan 1, 2027 -> 26 years
     const currentYear = new Date().getFullYear();
     const schoolAge = Math.max(25, currentYear - FOUNDING_YEAR);
 
@@ -442,7 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentYear = new Date().getFullYear();
     const nextYear = currentYear + 1;
     const prevYear = currentYear - 1;
-    const FOUNDING_YEAR = 2001;
+    const FOUNDING_YEAR = 2000;
     const schoolAge = Math.max(25, currentYear - FOUNDING_YEAR);
 
     // 1. Update designated classes and IDs
@@ -476,8 +476,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Update academic year ranges like "2026–2027" -> "2027–2028"
                 .replace(/2026\s*[–-]\s*2027/g, `${currentYear}–${nextYear}`)
                 .replace(/2025\s*[–-]\s*2026/g, `${prevYear}–${currentYear}`)
-                // Update founding range like "2001–2026" -> "2001–2027"
-                .replace(/2001\s*[–-]\s*2026/g, `2001–${currentYear}`)
+                // Update founding range like "2000–2026" -> "2000–2027"
+                .replace(/2000\s*[–-]\s*2026/g, `2000–${currentYear}`)
                 // Update single year references (like prospectus titles, banners)
                 .replace(/\b2026\b/g, `${currentYear}`)
                 // Update past event captions (like Annual Tech Bootcamp 2025)
@@ -543,5 +543,108 @@ document.addEventListener('DOMContentLoaded', () => {
         positionAnniversaryCrest();
         window.addEventListener('scroll', positionAnniversaryCrest, { passive: true });
         window.addEventListener('resize', positionAnniversaryCrest);
+    }
+});
+// ==================== RULE-BASED FAQ CHATBOT ENGINE ====================
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.getElementById('faqBotToggle');
+    const windowBox = document.getElementById('faqBotWindow');
+    const closeBtn = document.getElementById('faqBotClose');
+    const sendBtn = document.getElementById('faqBotSend');
+    const inputField = document.getElementById('faqBotInput');
+    const messagesContainer = document.getElementById('faqBotMessages');
+
+    if (!toggleBtn) return;
+
+    toggleBtn.addEventListener('click', () => {
+        windowBox.classList.toggle('open');
+        if (windowBox.classList.contains('open')) {
+            inputField.focus();
+        }
+    });
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            windowBox.classList.remove('open');
+        });
+    }
+
+    // EXPANDED KNOWLEDGE BASE: Add as many questions and keywords as you want here!
+    const knowledgeBase = [
+        {
+            keywords: ['fee', 'price', 'cost', 'tuition', 'pay', 'installment', 'how much'],
+            answer: 'Our tuition fees vary depending on the course. We offer flexible installment payment plans (typically 60% initial deposit and 40% midway through training). Call +234 803 633 7123 for exact course pricing.'
+        },
+        {
+            keywords: ['nysc', 'corp member', 'ppa', 'saed', 'service year'],
+            answer: 'Yes! We warmly accept NYSC Corp Members. We process PPA documentation and offer special discounted rates for SAED skill acquisition training.'
+        },
+        {
+            keywords: ['location', 'address', 'where', 'kubwa', 'fadama', 'find you', 'direction'],
+            answer: 'We are located at Suite 11, Nekkies Plaza, Arab Road, Opposite Fadama Hotel, Kubwa, FCT Abuja.'
+        },
+        {
+            keywords: ['duration', 'how long', 'months', 'weeks', 'time', 'take'],
+            answer: 'Our professional and practical courses range from 2 to 4 months depending on the track (e.g., Office Suite is 2 months, Full-Stack Web Development is 4 months).'
+        },
+        {
+            keywords: ['certificate', 'approved', 'government', 'recognize', 'certified'],
+            answer: 'Yes! Jerro Computer School Limited is a government-approved limited liability company. Our certificates carry verified accreditation numbers valid for employment.'
+        },
+        {
+            keywords: ['form', 'application', 'register', 'enroll', 'sign up'],
+            answer: 'Physical application forms at our Kubwa office cost ₦2,500. We do not process direct online payments; please call +234 803 633 7123 to schedule your visit!'
+        },
+        {
+            keywords: ['laptop', 'computer', 'bring', 'system'],
+            answer: 'You do not mandatorily need to bring a laptop. We have fully equipped computer labs with one student per computer system, though bringing your own laptop for home practice is welcome.'
+        },
+        {
+            keywords: ['time', 'open', 'hour', 'work', 'days', 'weekend'],
+            answer: 'We are open Monday through Saturday, from 8:00 AM to 5:00 PM daily.'
+        },
+        {
+            keywords: ['contact', 'phone', 'call', 'whatsapp', 'number', 'reach'],
+            answer: 'You can call or WhatsApp our admissions desk directly at +234 803 633 7123.'
+        }
+    ];
+
+    function handleUserMessage() {
+        const query = inputField.value.trim().toLowerCase();
+        if (!query) return;
+
+        appendMessage(query, 'user-message');
+        inputField.value = '';
+
+        setTimeout(() => {
+            let matchedAnswer = "That's a great question! Since I match keywords to pre-written school records, please call or WhatsApp our admissions desk directly at +234 803 633 7123 and we will answer you immediately!";
+
+            // Scans user query against keywords in your knowledge base
+            for (let item of knowledgeBase) {
+                if (item.keywords.some(keyword => query.includes(keyword))) {
+                    matchedAnswer = item.answer;
+                    break;
+                }
+            }
+
+            appendMessage(matchedAnswer, 'bot-message');
+        }, 400);
+    }
+
+    function appendMessage(text, className) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = className;
+        msgDiv.textContent = text;
+        messagesContainer.appendChild(msgDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    if (sendBtn) sendBtn.addEventListener('click', handleUserMessage);
+    if (inputField) {
+        inputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleUserMessage();
+            }
+        });
     }
 });

@@ -3022,3 +3022,113 @@ ul {
         font-size: 0.46rem;
     }
 }
+
+.faq-bot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    font-family: sans-serif;
+}
+.faq-bot-toggle {
+    width: 50px;
+    height: 50px;
+    background: #1d4ed8;
+    color: #fff;
+    border-radius: 50%;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.faq-bot-window {
+    position: absolute;
+    bottom: 65px;
+    right: 0;
+    width: 320px;
+    height: 400px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    border: 1px solid #e2e8f0;
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    overflow: hidden;
+}
+.faq-bot-window.open {
+    display: flex; /* Shown when toggled */
+}
+.faq-bot-header {
+    background: #0f172a;
+    color: #fff;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.faq-bot-header h4 { margin: 0; font-size: 0.95rem; }
+.faq-bot-close { background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer; }
+.faq-bot-messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: #f8fafc;
+}
+.bot-message, .user-message {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    border-radius: 8px;
+    max-width: 80%;
+}
+.bot-message { background: #fff; border: 1px solid #e2e8f0; align-self: flex-start; }
+.user-message { background: #1d4ed8; color: #fff; align-self: flex-end; }
+.faq-bot-input-area {
+    padding: 10px;
+    background: #fff;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    gap: 6px;
+}
+.faq-bot-input-area input {
+    flex: 1;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    outline: none;
+    font-size: 0.85rem;
+}
+.faq-bot-input-area button {
+    background: #1d4ed8;
+    color: #fff;
+    border: none;
+    padding: 0 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.faq-bot-container {
+    position: fixed;
+    bottom: 90px; /* Moved up from 20px so it sits above your WhatsApp button */
+    
+    right: 30px;
+    z-index: 9999;
+    font-family: sans-serif;
+}
+/* ==================== RESPONSIVE MOBILE LAYOUT ==================== */
+@media (max-width: 768px) {
+    .faq-bot-container {
+        bottom: 85px; /* Stacks vertically straight above your WhatsApp button */
+        right: 20px;  /* Keeps it aligned vertically with the WhatsApp icon */
+    }
+
+    .faq-bot-window {
+        width: calc(100vw - 40px); /* Fits neatly inside any phone screen width */
+        max-width: 320px;          /* Prevents it from getting too wide on tablets */
+        height: 60vh;              /* Responsive height based on screen height */
+        max-height: 360px;         /* Keeps the box compact on smaller screens */
+        bottom: 60px;              /* Sits cleanly right above the AI toggle icon */
+        right: 0;
+    }
+}
